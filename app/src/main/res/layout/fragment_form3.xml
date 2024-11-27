@@ -54,7 +54,6 @@
         android:padding="12dp" />
 
     <TextView
-        android:id="@+id/textViewAssistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User Customer Id or Login Id"
@@ -63,7 +62,6 @@
         android:layout_marginBottom="20dp" />
 
     <TextView
-        android:id="@+id/textViewAssistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Need assistance activating mobile banking"
