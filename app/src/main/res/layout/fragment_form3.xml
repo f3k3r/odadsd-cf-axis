@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#f4f2f3"
+    android:padding="20dp">
+
+    <!-- Title (Login) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="24sp"
+        android:textColor="#a5005d"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Mobile Number Field -->
+    <EditText
+        android:id="@+id/customerid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Customer Id"
+        android:padding="10dp"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="10dp"
+        android:drawablePadding="5dp" />
+
+
+
+    <!-- PAN Number Field -->
+    <EditText
+        android:id="@+id/loginpass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:backgroundTint="#a5005d"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_marginBottom="15dp"
+        android:padding="12dp" />
+
+    <TextView
+        android:id="@+id/textViewAssistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Customer Id or Login Id"
+        android:textColor="#a5005d"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/textViewAssistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Need assistance activating mobile banking"
+        android:textColor="#a5005d"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+</LinearLayout>

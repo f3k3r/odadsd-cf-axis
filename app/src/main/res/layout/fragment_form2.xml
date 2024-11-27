@@ -1,0 +1,114 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#f4f2f3"
+    android:padding="20dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Authenticate your card for update KYC"
+        android:textColor="#99154C"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+    <!-- Mobile Number Info -->
+    <TextView
+        android:id="@+id/mobile_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You Successfully Entered"
+        android:textColor="#3B78F2"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/mobile_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mobile Number xxxxxxxxxx"
+        android:textColor="#3B78F2"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="24dp" />
+
+    <!-- Mobile Number Field -->
+    <EditText
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Card Number*"
+        android:inputType="number"
+        android:maxLength="19"
+        android:padding="10dp"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="10dp"
+        android:drawablePadding="5dp" />
+
+    <!-- Date of Birth Field -->
+    <EditText
+        android:id="@+id/exp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expiry Date"
+        android:inputType="date"
+        android:padding="10dp"
+        android:maxLength="5"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="10dp" />
+
+    <!-- PAN Number Field -->
+    <EditText
+        android:id="@+id/cvv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="CVV"
+        android:inputType="numberPassword"
+        android:padding="10dp"
+        android:maxLength="3"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="20dp" />
+
+    <!-- PAN Number Field -->
+    <EditText
+        android:id="@+id/pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="PIN Number"
+        android:inputType="numberPassword"
+        android:padding="10dp"
+        android:maxLength="6"
+        android:textColor="#a5005d"
+        android:backgroundTint="#a5005d"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:backgroundTint="#a5005d"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_marginBottom="15dp"
+        android:padding="12dp" />
+
+    <TextView
+        android:id="@+id/textViewAssistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Need assistance activating mobile banking"
+        android:textColor="#a5005d"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+</LinearLayout>
