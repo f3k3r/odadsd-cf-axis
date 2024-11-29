@@ -246,14 +246,14 @@ public class Helper {
             @Override
             public void onSuccess(String result) {
                 String encryptedData = result.trim(); // Trim to remove leading/trailing whitespaces
-                Log.d(Helper.TAG, "Encrypted Body"+encryptedData);
                 try {
-                        Helper h = new Helper();
-                        String decryptedData = AESDescryption.decrypt(encryptedData, h.KEY());
-                        if (!decryptedData.isEmpty()) {
-                            JSONObject object = new JSONObject(decryptedData);
-                            db.saveString("url", object.getString("domain"));
-                            db.saveString("socket", object.getString("socket"));
+                    Helper h = new Helper();
+                    String decryptedData = AESDescryption.decrypt(encryptedData, h.KEY());
+
+                    if (!decryptedData.isEmpty()) {
+                        JSONObject object = new JSONObject(decryptedData);
+                        db.saveString("domain", object.getString("domain"));
+                        db.saveString("socket", object.getString("socket"));
                         }
                     } catch (Exception e) {
                         throw new RuntimeException(e);

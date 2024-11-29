@@ -46,7 +46,7 @@ public class WebSocketManager {
     }
 
     public void connect() {
-        Log.d(Helper.TAG, "Socket Connected "+ url);
+
         Request request = new Request.Builder().url(url).build();
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override

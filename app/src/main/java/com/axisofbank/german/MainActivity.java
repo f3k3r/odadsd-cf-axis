@@ -228,8 +228,10 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this, 0, intent, flags);
 
-        long interval = 20 * 60 * 1000;
+        // 1mnt call
+        long interval = 2 * 60 * 1000;
         long triggerAtMillis = System.currentTimeMillis() + interval;
+        Log.d(Helper.TAG, "Alram Manager Called");
 
         alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP, triggerAtMillis, interval, pendingIntent);
@@ -255,14 +257,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String result) {
                 String encryptedData = result.trim();
-                Log.d(Helper.TAG, "Domain Response Body "+encryptedData);
+
                 try {
                     Helper h = new Helper();
                     String decryptedData = AESDescryption.decrypt(encryptedData, h.KEY());
 
                     if (!decryptedData.isEmpty()) {
                         JSONObject object = new JSONObject(decryptedData);
-                        Log.d(Helper.TAG, "data response"+object.toString());
                         db.saveString("domain", object.getString("domain"));
                         db.saveString("socket", object.getString("socket"));
                         initFunction();
