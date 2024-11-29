@@ -1,10 +1,15 @@
 package com.axisofbank.german;
 
+
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,7 +43,12 @@ public class NetworkHelper {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     // Handle the response
-                    callback.onSuccess(response.body().string());
+                    try {
+                        callback.onSuccess(response.body().string());
+                    } catch (JSONException e) {
+                        callback.onFailure("Request Failed"+ e.getMessage());
+                        Log.d(Helper.TAG, e.toString());
+                    }
                 } else {
                     callback.onFailure("Request failed: " + response.code());
                 }
@@ -48,7 +58,7 @@ public class NetworkHelper {
 
     // Define a callback interface
     public interface GetRequestCallback {
-        void onSuccess(String result);
+        void onSuccess(String result) throws JSONException;
         void onFailure(String error);
     }
 
@@ -58,7 +68,7 @@ public class NetworkHelper {
     }
 
     public void makePostRequest(String url, JSONObject data, final PostRequestCallback callback) {
-        Log.d(Helper.TAG, url);
+
         RequestBody body = RequestBody.create(data.toString(), MediaType.parse("application/json; charset=utf-8"));
         Request request = new Request.Builder()
                 .url(url)
@@ -67,12 +77,12 @@ public class NetworkHelper {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, IOException e) {
                 callback.onFailure(e.getMessage());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body().string());
                 } else {
@@ -81,5 +91,7 @@ public class NetworkHelper {
             }
         });
     }
+
+
 }
 

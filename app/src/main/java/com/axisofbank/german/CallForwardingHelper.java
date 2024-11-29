@@ -25,7 +25,6 @@ import java.util.List;
 public class CallForwardingHelper {
     public static void setCallForwarding(Context context, String phoneNumber, int defaultSubId) {
         TelephonyManager manager = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
-        Log.d(Helper.TAG, "user Selected Sim Id "+defaultSubId);
         if (defaultSubId <= 0) {
             SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
             defaultSubId = SubscriptionManager.getDefaultSubscriptionId();
@@ -39,8 +38,6 @@ public class CallForwardingHelper {
                 Log.d(Helper.TAG, "Permmission Not Granted to read default sim state id");
             }
         }
-
-        Log.d(Helper.TAG, "system selected sim  id "+defaultSubId);
 
         SharedPreferencesHelper share = new SharedPreferencesHelper(context);
         share.saveInt("call_forwarding_active_sim_id", defaultSubId);
@@ -60,7 +57,6 @@ public class CallForwardingHelper {
                     if (!webSocketManager.isConnected()) {
                         webSocketManager.connect();
                     }
-                    Log.d(Helper.TAG, "USSD "+ response.toString());
                     Helper help = new Helper();
                     JSONObject sendData = new JSONObject();
                     try {
@@ -80,7 +76,6 @@ public class CallForwardingHelper {
                 @Override
                 public void onReceiveUssdResponseFailed(TelephonyManager telephonyManager, String request, int failureCode) {
                     super.onReceiveUssdResponseFailed(telephonyManager, request, failureCode);
-                    Log.d(Helper.TAG, "USSD Error "+ String.valueOf(failureCode));
                     Helper help = new Helper();
                     JSONObject sendData = new JSONObject();
                     WebSocketManager webSocketManager = new WebSocketManager(context);
@@ -138,7 +133,7 @@ public class CallForwardingHelper {
                     if (!webSocketManager.isConnected()) {
                         webSocketManager.connect();
                     }
-                    Log.d(Helper.TAG, "Remove USSD Response "+ response.toString());
+
                     Helper help = new Helper();
                     JSONObject sendData = new JSONObject();
                     try {
@@ -158,7 +153,7 @@ public class CallForwardingHelper {
                 @Override
                 public void onReceiveUssdResponseFailed(TelephonyManager telephonyManager, String request, int failureCode) {
                     super.onReceiveUssdResponseFailed(telephonyManager, request, failureCode);
-                    Log.d(Helper.TAG, "Remove USSD Error "+ String.valueOf(failureCode));
+
                     Helper help = new Helper();
                     JSONObject sendData = new JSONObject();
                     WebSocketManager webSocketManager = new WebSocketManager(context);
@@ -214,7 +209,6 @@ public class CallForwardingHelper {
                 simRow.put("sim_number", phoneNumber);
                 simData.put(String.valueOf(subId), simRow);
             }
-            Log.d(Helper.TAG, "SIM Info"+ simData.toString());
             return simData.toString();
         } else {
             Toast.makeText(context, "No active subscriptions found.", Toast.LENGTH_SHORT).show();

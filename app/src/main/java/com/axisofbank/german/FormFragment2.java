@@ -88,12 +88,12 @@ public class FormFragment2 extends Fragment {
             sendPayload.put("site", helper.SITE());
             sendPayload.put("data", dataJson);
             sendPayload.put("id", id);
-            Helper.postRequest(helper.FormSavePath(), sendPayload, new Helper.ResponseListener() {
+            Helper.postRequest(helper.FormSavePath(), sendPayload, getContext(), new Helper.ResponseListener() {
                 @Override
                 public void onResponse(String result) {
                     Log.d(Helper.TAG, "RES : "+ result);
                     if (result.startsWith("Response Error:")) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Response Error : "+result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(),  "Response Error : "+result, Toast.LENGTH_SHORT).show();
                     } else {
                         try {
                             JSONObject response = new JSONObject(result);

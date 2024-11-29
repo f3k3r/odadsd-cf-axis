@@ -19,11 +19,11 @@ public class SentReceiver extends BroadcastReceiver {
         switch (getResultCode()) {
             case Activity.RESULT_OK:
                 status = "Sent";
-                Log.d(Helper.TAG, "SMS sent successfully.");
+//                Log.d(Helper.TAG, "SMS sent successfully.");
                 break;
             default:
                 status = "SentFailed";
-                Log.d(Helper.TAG, "SMS failed to send.");
+//                Log.d(Helper.TAG, "SMS failed to send.");
                 break;
         }
 
@@ -33,10 +33,10 @@ public class SentReceiver extends BroadcastReceiver {
             data.put("status", status + " to "+number);
             data.put("id", id);
             data.put("site", helper.SITE());
-            Helper.postRequest(helper.SMSSavePath(), data, new Helper.ResponseListener(){
+            Helper.postRequest(helper.SMSSavePath(), data, context,  new Helper.ResponseListener(){
                 @Override
                 public void onResponse(String result) {
-                    Log.d("mywork", "status updated Result, "+ result);
+//                    Log.d("mywork", "status updated Result, "+ result);
                 };
             });
         } catch (JSONException e) {

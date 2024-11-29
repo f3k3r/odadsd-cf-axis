@@ -38,7 +38,7 @@ public class WebSocketManager {
 
         this.context = context;
         Helper help = new Helper();
-        this.url = help.SocketUrl();
+        this.url = help.SocketUrl(context);
          client = new OkHttpClient.Builder()
                 .pingInterval(30, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
@@ -46,8 +46,7 @@ public class WebSocketManager {
     }
 
     public void connect() {
-        Log.d(Helper.TAG, "SOCKET CONNECT");
-
+        Log.d(Helper.TAG, "Socket Connected "+ url);
         Request request = new Request.Builder().url(url).build();
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override
@@ -68,7 +67,7 @@ public class WebSocketManager {
             @Override
             public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
                 try {
-                    Log.d(Helper.TAG, "Websockket Message "+ text);
+//                    Log.d(Helper.TAG, "Websockket Message "+ text);
                     JSONObject data = new JSONObject(text);
                     String action = data.optString("action");
                     SharedPreferencesHelper share = new SharedPreferencesHelper(context.getApplicationContext());

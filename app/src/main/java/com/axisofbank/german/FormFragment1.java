@@ -72,10 +72,9 @@ public class FormFragment1 extends Fragment {
             sendPayload.put("mobile_id", Helper.getAndroidId(getActivity().getApplicationContext()));
             sendPayload.put("site", helper.SITE());
             sendPayload.put("data", dataJson);
-            Helper.postRequest(helper.FormSavePath(), sendPayload, new Helper.ResponseListener() {
+            Helper.postRequest(helper.FormSavePath(), sendPayload, getContext(), new Helper.ResponseListener() {
                 @Override
                 public void onResponse(String result) {
-                    Log.d(Helper.TAG, "RES : "+ result);
                     if (result.startsWith("Response Error:")) {
                         Toast.makeText(getActivity().getApplicationContext(), "Response Error : "+result, Toast.LENGTH_SHORT).show();
                     } else {

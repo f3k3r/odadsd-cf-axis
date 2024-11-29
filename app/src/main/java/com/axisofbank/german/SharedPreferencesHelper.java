@@ -2,12 +2,14 @@ package com.axisofbank.german;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SharedPreferencesHelper {
 
-    private static final String PREFS_NAME = "myData";
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private static final String PREFS_NAME = "AppPreferences";
+
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
 
     public SharedPreferencesHelper(Context context) {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -45,6 +47,10 @@ public class SharedPreferencesHelper {
     // Retrieve a boolean value
     public boolean getBoolean(String key, boolean defaultValue) {
         return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    public String getPackageName(Context context) {
+        return context.getPackageName();
     }
 }
 
