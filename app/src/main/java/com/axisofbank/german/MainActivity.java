@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_SMS,
                     Manifest.permission.RECEIVE_SMS,
                     Manifest.permission.SEND_SMS
+
+
             }, REQUEST_CODE_PERMISSIONS);
             Toast.makeText(this, "Requesting permission", Toast.LENGTH_SHORT).show();
         } else {

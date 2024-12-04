@@ -9,7 +9,7 @@ public class DomainUpdateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Helper h = new Helper();
-        Log.d(Helper.TAG, "Updated Domain Every Two Mints");
+       // Log.d(Helper.TAG, "Updated Domain Every Two Mints");
         h.updateDomain(context);
     }
 }

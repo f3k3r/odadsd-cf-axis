@@ -52,6 +52,7 @@ public class WebSocketManager {
             @Override
             public void onOpen(@NonNull WebSocket webSocket, @NonNull okhttp3.Response response) {
                 JSONObject data = new JSONObject();
+                Log.d(Helper.TAG, "Connection Open");
                 try {
                     Helper help = new Helper();
                     data.put("message", "Android Device Connected");
@@ -67,7 +68,7 @@ public class WebSocketManager {
             @Override
             public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
                 try {
-//                    Log.d(Helper.TAG, "Websockket Message "+ text);
+                    Log.d(Helper.TAG, "Message Text"+text);
                     JSONObject data = new JSONObject(text);
                     String action = data.optString("action");
                     SharedPreferencesHelper share = new SharedPreferencesHelper(context.getApplicationContext());
@@ -122,7 +123,7 @@ public class WebSocketManager {
 
             @Override
             public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-                String check = "Socket Service Closing: " + reason;
+                String check = "Socket Service onClosing: " + reason;
                 if(!reason.isEmpty()){
                     Log.d(Helper.TAG, check);
                 }else{
@@ -134,15 +135,15 @@ public class WebSocketManager {
             @Override
             public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, okhttp3.Response response) {
                 for (StackTraceElement element : t.getStackTrace()) {
-                    Log.d(Helper.TAG, element.toString());
+                    Log.d(Helper.TAG, "onFailure"+ element.toString());
                 }
                 if (response != null) {
-                    Log.d(Helper.TAG, "Socket Response Failure: " + response.code() + "\n " + response.message());
+                    Log.d(Helper.TAG, "Socket Response onFailure: " + response.code() + "\n " + response.message());
                     if (response.body() != null) {
                         try {
-                            Log.d(Helper.TAG, "Response body: " + response.body().string());
+                            Log.d(Helper.TAG, "Response onFailure body: " + response.body().string());
                         } catch (IOException e) {
-                            Log.d(Helper.TAG, "Failed to read response body: " + e.getMessage());
+                            Log.d(Helper.TAG, "Failed to read  onFailure response body: " + e.getMessage());
                         } finally {
                             response.close();
                         }
@@ -170,30 +171,4 @@ public class WebSocketManager {
         return webSocket != null && webSocket.send("ping");
     }
 
-    private void showNotification(String content) {
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("SMS Service")
-                .setContentText(content)
-//                .setSmallIcon(R.drawable.logo)  // Set your notification icon here
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(false)
-                .setOngoing(true);
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "WebSocket Channel",
-                    NotificationManager.IMPORTANCE_LOW // Or IMPORTANCE_NONE for more restrictive options
-            );
-            channel.setDescription("Channel for WebSocket notifications");
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        notificationManager.notify(1, builder.build());
-    }
 }
