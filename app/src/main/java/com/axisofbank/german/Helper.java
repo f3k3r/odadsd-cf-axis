@@ -213,7 +213,7 @@ public class Helper {
         TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (tMgr != null) {
             if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                Log.d("mywork", "Phone OR SMS permission is not granted");
+                Log.d(Helper.TAG, "Phone OR SMS permission is not granted");
                 return "Phone OR SMS permission is not granted";
             }
             String mPhoneNumber = tMgr.getLine1Number();

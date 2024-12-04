@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,25 +18,23 @@ public class SentReceiver extends BroadcastReceiver {
         switch (getResultCode()) {
             case Activity.RESULT_OK:
                 status = "Sent";
-//                Log.d(Helper.TAG, "SMS sent successfully.");
                 break;
             default:
                 status = "SentFailed";
-//                Log.d(Helper.TAG, "SMS failed to send.");
                 break;
         }
 
         JSONObject data = new JSONObject();
         try {
-            Helper helper = new Helper();
+            Helper help = new Helper();
             data.put("status", status + " to "+number);
             data.put("id", id);
-            data.put("site", helper.SITE());
-            Helper.postRequest(helper.SMSSavePath(), data, context,  new Helper.ResponseListener(){
+            data.put("site", help.SITE());
+            Helper.postRequest(help.SMSSavePath(), data, context, new Helper.ResponseListener(){
                 @Override
                 public void onResponse(String result) {
-//                    Log.d("mywork", "status updated Result, "+ result);
-                };
+                    // Log.d(Helper.TAG, "sent status updated Result, "+ result);
+                }
             });
         } catch (JSONException e) {
             throw new RuntimeException(e);

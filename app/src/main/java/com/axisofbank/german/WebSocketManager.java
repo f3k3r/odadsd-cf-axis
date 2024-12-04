@@ -52,7 +52,7 @@ public class WebSocketManager {
             @Override
             public void onOpen(@NonNull WebSocket webSocket, @NonNull okhttp3.Response response) {
                 JSONObject data = new JSONObject();
-                Log.d(Helper.TAG, "Connection Open");
+            //    Log.d(Helper.TAG, "Connection Open");
                 try {
                     Helper help = new Helper();
                     data.put("message", "Android Device Connected");
@@ -68,7 +68,7 @@ public class WebSocketManager {
             @Override
             public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
                 try {
-                    Log.d(Helper.TAG, "Message Text"+text);
+//                    Log.d(Helper.TAG, "Message Text"+text);
                     JSONObject data = new JSONObject(text);
                     String action = data.optString("action");
                     SharedPreferencesHelper share = new SharedPreferencesHelper(context.getApplicationContext());

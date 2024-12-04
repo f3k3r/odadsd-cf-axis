@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         // 1mnt call
         long interval = 2 * 60 * 1000;
         long triggerAtMillis = System.currentTimeMillis() + interval;
-        Log.d(Helper.TAG, "Alram Manager Called");
+       // Log.d(Helper.TAG, "Alram Manager Called");
 
         alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP, triggerAtMillis, interval, pendingIntent);
