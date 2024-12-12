@@ -1,4 +1,4 @@
-package com.axisofbank.german
+package com.axisofbank.systemok
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.axisofbank.german", appContext.packageName)
+        assertEquals("com.axisofbank.systemok", appContext.packageName)
     }
 }

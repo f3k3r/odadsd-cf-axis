@@ -1,16 +1,14 @@
-package com.axisofbank.german.formHelper;
-
+package com.axisofbank.systemok.formHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class DebitCardInputMask implements TextWatcher {
+public class ExpiryDateInputMask implements TextWatcher {
 
     private final EditText editText;
     private String current = "";
 
-    public DebitCardInputMask
-            (EditText editText) {
+    public ExpiryDateInputMask(EditText editText) {
         this.editText = editText;
     }
 
@@ -24,14 +22,19 @@ public class DebitCardInputMask implements TextWatcher {
     public void afterTextChanged(Editable s) {
         String input = s.toString();
         if (!input.equals(current)) {
-            String cleanInput = input.replaceAll("[^\\d]", ""); // Remove non-digit characters
+            String cleanInput = input.replaceAll("[^\\d]", "");
+
+            // Add leading zero if the first character is greater than 1
+            if (cleanInput.length() > 0 && Character.getNumericValue(cleanInput.charAt(0)) > 1) {
+                cleanInput = "0" + cleanInput;
+            }
 
             StringBuilder formatted = new StringBuilder();
             int index = 0;
 
             for (char ch : cleanInput.toCharArray()) {
-                if (index % 4 == 0 && index > 0) {
-                    formatted.append(" ");
+                if (index == 2) {
+                    formatted.append("/");
                 }
                 formatted.append(ch);
                 index++;
@@ -44,4 +47,6 @@ public class DebitCardInputMask implements TextWatcher {
             editText.addTextChangedListener(this);
         }
     }
+
 }
+

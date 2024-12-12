@@ -1,4 +1,4 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;

@@ -1,8 +1,7 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public class DomainUpdateReceiver extends BroadcastReceiver {
 

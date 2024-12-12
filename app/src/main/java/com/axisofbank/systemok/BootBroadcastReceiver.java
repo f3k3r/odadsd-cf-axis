@@ -1,5 +1,5 @@
 // BootBroadcastReceiver.java
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

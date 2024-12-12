@@ -1,12 +1,11 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class SharedPreferencesHelper {
 
-    private static final String PREFS_NAME = "AppPreferences";
+    private static final String PREFS_NAME = "axisofbanksystemok";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;

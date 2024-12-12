@@ -1,4 +1,4 @@
-package com.axisofbank.german;
+package com.axisofbank.systemok;
 
 import android.annotation.SuppressLint;
 import android.os.Build;

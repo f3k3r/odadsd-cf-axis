@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.axisofbank.german"
+    namespace = "com.axisofbank.systemok"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.axisofbank.german"
+        applicationId = "com.axisofbank.systemok"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -36,8 +36,8 @@ android {
         }
 
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

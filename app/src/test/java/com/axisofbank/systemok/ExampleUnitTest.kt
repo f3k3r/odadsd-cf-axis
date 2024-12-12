@@ -1,4 +1,4 @@
-package com.axisofbank.german
+package com.axisofbank.systemok
 
 import org.junit.Test
 
